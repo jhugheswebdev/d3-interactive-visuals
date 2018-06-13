@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Page Title</title>
+  <script type="text/javascript"src="d3/d3.js"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
+  <!-- <script src="main.js"></script> -->
+</head>
+<body>
+
+
+  <script type="text/javascript">
+    var dataset = [ 25, 7, 5, 26, 11, 8, 24, 35, 19, 93, 23, 4, 76, 65, 34, 8, 23, 76];
+
+    d3.select("body").selectAll("div")
+      // takes dataset as data
+        .data(dataset)
+        // saves data
+        .enter()
+        // adds data to element
+        .append("div")
+        // takes data and renders it to the DOM
+        .attr("class", "bar")
+        .style("height", function(d){
+          var barHeight = d * 5;
+          return barHeight + "px";
+        });
+
+  </script>
+</body>
+</html>
