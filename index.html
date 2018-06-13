@@ -16,20 +16,30 @@
   <script type="text/javascript">
     var dataset = [ 25, 7, 5, 26, 11, 8, 24, 35, 19, 93, 23, 4, 76, 65, 34, 8, 23, 76];
 
-    d3.select("body").selectAll("div")
-      // takes dataset as data
-        .data(dataset)
-        // saves data
-        .enter()
-        // adds data to element
-        .append("div")
-        // takes data and renders it to the DOM
-        .attr("class", "bar")
-        .style("height", function(d){
-          var barHeight = d * 5;
-          return barHeight + "px";
-        });
+    var width = 500;
+    var height = 50;
+    // creates svg element
+    var svg = d3.select("body").append("svg")
+                .attr("width", width)
+                .attr("height", height);
 
+    var circles = svg.selectAll("circle")
+      .data(dataset)
+      .enter()
+      .append("circle");    
+
+    circles.attr("cx", function(d, i){
+      return (i * 50) + 25;
+    })
+    .attr("cy", height / 2)
+    .attr("r", function(d) {
+      return d;
+    })
+    .attr("fill", "yellow")
+    .attr("stroke", "orange")
+    .attr("stroke-width", function(d) {
+      return d/2;
+    })
   </script>
 </body>
 </html>
