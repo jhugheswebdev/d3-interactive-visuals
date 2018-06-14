@@ -60,9 +60,19 @@
 
 d3.select("p")
          .on("click",function() {
-          dataset = [ 11, 12, 15, 20, 18, 17, 16, 18, 23, 25,
-            5, 10, 13, 19, 21, 25, 22, 18, 15, 13 ];
+          // dataset = [ 11, 12, 15, 20, 18, 17, 16, 18, 23, 25,
+          //   5, 10, 13, 19, 21, 25, 22, 18, 15, 13 ];
+          var maxValue = 100;
           
+          var numValues = dataset.length;
+          dataset = [];
+          for (let i = 0; i < numValues; i++) {
+            var newNumber = Math.floor(Math.random() * maxValue);
+            dataset.push(newNumber);
+          }
+          
+          yScale.domain([0, d3.max(dataset)]);
+
           svg.selectAll("rect")
             .data(dataset)
             .transition()
