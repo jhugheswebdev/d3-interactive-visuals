@@ -52,7 +52,12 @@ var dataset = [
 ];
 
 var width = 500;
-var height = 100;
+var height = 300;
+
+var svg = d3.select("body")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
 
 var padding = 20;
 
@@ -68,10 +73,7 @@ var rScale = d3.scale.linear()
     .domain([0, d3.max(dataset, function(d) { return d[1];})])
     .range([2, 5]);
 
-var svg = d3.select("body")
-            .append("svg")
-            .attr("width", width)
-            .attr("height", height);
+
 
 svg.selectAll("circle")
     .data(dataset)
@@ -99,6 +101,19 @@ svg.selectAll("text")
     .attr("font-family", "sans-serif")
     .attr("font-size", "11px")
     .attr("fill", "red");
+
+
+var xAxis = d3.svg.axis()
+                  .scale(xScale)
+                  .orient("bottom")
+                  .ticks(5);
+                  
+
+svg.append("g")
+    .attr("class", "axis")
+    //moves x axis to bottom
+    .attr("transform", "translate(0," + (height - padding) + ")")
+    .call(xAxis);
 
 // ==============================================
 // SCALES
