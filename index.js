@@ -39,17 +39,27 @@
 // ==================================================================
 // =============================== SCATTERPLOT ======================
 
-var dataset = [
-  [5,20], 
-  [480,90], 
-  [250,50],
-  [100,33],
-  [330,95],
-  [410, 12], 
-  [475, 44], 
-  [25, 67], 
-  [220, 99]
-];
+// var dataset = [
+//   [5,20], 
+//   [480,90], 
+//   [250,50],
+//   [100,33],
+//   [330,95],
+//   [410, 12], 
+//   [475, 44], 
+//   [25, 67], 
+//   [220, 99]
+// ];
+
+var dataset = [];
+var numDataPoints = 50;
+var xRange = Math.random() * 1000;
+var yRange = Math.random() * 1000;
+for (let i = 0; i < numDataPoints; i++) {
+  var newNumber1 = Math.floor(Math.random() * xRange);
+  var newNumber2 = Math.floor(Math.random() * yRange);
+  dataset.push([newNumber1, newNumber2])
+}
 
 var width = 500;
 var height = 300;
@@ -59,7 +69,7 @@ var svg = d3.select("body")
             .attr("width", width)
             .attr("height", height);
 
-var padding = 20;
+var padding = 30;
 
 var xScale = d3.scale.linear()
     .domain([0, d3.max(dataset, function(d) {return d[0];})])
@@ -114,6 +124,16 @@ svg.append("g")
     //moves x axis to bottom
     .attr("transform", "translate(0," + (height - padding) + ")")
     .call(xAxis);
+
+var yAxis = d3.svg.axis()
+                  .scale(yScale)
+                  .orient("left")
+                  .ticks(5);
+
+svg.append("g")
+    .attr("class", "axis")
+    .attr("transform", "translate(" + padding + ", 0)")
+    .call(yAxis);
 
 // ==============================================
 // SCALES
