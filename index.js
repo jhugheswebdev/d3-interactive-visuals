@@ -65,6 +65,12 @@ d3.select("p")
           
           svg.selectAll("rect")
             .data(dataset)
+            .transition()
+            .delay(function(d, i) {
+              return i / dataset.length * 1000;
+            })
+            .duration(500)
+            .ease("linear")
             .attr("y", function(d) {
                       return h - yScale(d);
             })
@@ -78,6 +84,12 @@ d3.select("p")
                 //Create labels
           svg.selectAll("text")
             .data(dataset)
+            .transition()
+            .delay(function(d, i) {
+              return i / dataset.length * 1000;
+             })
+            .duration(500)
+            .ease("linear")
             .text(function(d) {
                 return d;
             })
