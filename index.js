@@ -1,16 +1,43 @@
+
+
+
+
 //Width and height
 			var w = 600;
 			var h = 250;
 			
-			var dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
-							11, 12, 15, 20, 18, 17, 16, 18, 23, 25 ];
-			
+// 			var dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
+// 							11, 12, 15, 20, 18, 17, 16, 18, 23, 25 ];
+
+var dataset = [ { key: 0, value: 5 },		//dataset is now an array of objects.
+  { key: 1, value: 10 },		//Each object has a 'key' and a 'value'.
+  { key: 2, value: 13 },
+  { key: 3, value: 19 },
+  { key: 4, value: 21 },
+  { key: 5, value: 25 },
+  { key: 6, value: 22 },
+  { key: 7, value: 18 },
+  { key: 8, value: 15 },
+  { key: 9, value: 13 },
+  { key: 10, value: 11 },
+  { key: 11, value: 12 },
+  { key: 12, value: 15 },
+  { key: 13, value: 20 },
+  { key: 14, value: 18 },
+  { key: 15, value: 17 },
+  { key: 16, value: 16 },
+  { key: 17, value: 18 },
+  { key: 18, value: 23 },
+  { key: 19, value: 25 } ];
+
 			var xScale = d3.scale.ordinal()
 							.domain(d3.range(dataset.length))
 							.rangeRoundBands([0, w], 0.05);
 
 			var yScale = d3.scale.linear()
-							.domain([0, d3.max(dataset)])
+							.domain([0, d3.max(dataset, function(d) {
+                return d.value;
+              })])
 							.range([0, h]);
 			
 			//Create SVG element
@@ -19,39 +46,44 @@
 						.attr("width", w)
 						.attr("height", h);
 
+
+      var key = function(d) {
+        return d.key;
+      };
+
 			//Create bars
 			svg.selectAll("rect")
-			   .data(dataset)
+			   .data(dataset, key)
 			   .enter()
 			   .append("rect")
 			   .attr("x", function(d, i) {
 			   		return xScale(i);
 			   })
 			   .attr("y", function(d) {
-			   		return h - yScale(d);
+			   		return h - yScale(d.value);
 			   })
 			   .attr("width", xScale.rangeBand())
 			   .attr("height", function(d) {
-			   		return yScale(d);
+			   		return yScale(d.value);
 			   })
 			   .attr("fill", function(d) {
-					return "rgb(0, 0, " + (d * 10) + ")";
+					return "rgb(0, 0, " + (d.value * 10) + ")";
 			   });
 
 			//Create labels
 			svg.selectAll("text")
-			   .data(dataset)
+			   .data(dataset, key)
 			   .enter()
 			   .append("text")
 			   .text(function(d) {
-			   		return d;
+			   		return d.value;
 			   })
 			   .attr("text-anchor", "middle")
 			   .attr("x", function(d, i) {
 			   		return xScale(i) + xScale.rangeBand() / 2;
 			   })
 			   .attr("y", function(d) {
-			   		return h - yScale(d) + 14;
+			   		return h - yScale(d.value) + 14;
 			   })
 			   .attr("font-family", "sans-serif")
 			   .attr("font-size", "11px")
@@ -61,21 +93,35 @@
 
 
 			//On click, update with new data			
-			d3.select("p")
+			d3.selectAll("p")
 				.on("click", function() {
+          // see which p was clicked
+          var paragraphID = d3.select(this).attr("id");
 
-					//Add one new value to dataset
-					var maxValue = 25;
-					// var newNumber = Math.floor(Math.random() * maxValue);	//New random integer (0-24)
-					dataset.shift();			 			 		//Add new number to array
+          if(paragraphID == "add") {
+            var maxValue = 25;
+            var newNumber = Math.floor(Math.random() * maxValue);	//New random integer (0-24)
+            var lastKeyValue = dataset[dataset.length - 1].key;
+            console.log(lastKeyValue);
+            dataset.push({
+              key: lastKeyValue + 1,
+              value: newNumber
+            });
+          } else {
+            	//Add one new value to dataset
+					  dataset.shift();			 			 
+          }
+						//Add new number to array
 					
 					//Update scale domains
 					xScale.domain(d3.range(dataset.length));	//Recalibrate the x scale domain, given the new length of dataset
-					yScale.domain([0, d3.max(dataset)]);		//Recalibrate the y scale domain, given the new max value in dataset
+					yScale.domain([0, d3.max(dataset, function(d) {
+            return d.value;
+          })]);		//Recalibrate the y scale domain, given the new max value in dataset
 
 					//Select…
 					var bars = svg.selectAll("rect")			//Select all bars
-						.data(dataset);							//Re-bind data to existing bars, return the 'update' selection
+						.data(dataset, key);							//Re-bind data to existing bars, return the 'update' selection
 																//'bars' is now the update selection
 					
 					//Enter…
@@ -97,7 +143,7 @@
           bars.exit()
               .transition()
               .duration(500)
-              .attr("x", w)
+              .attr("x", -xScale.rangeBand())
               .remove();
 
 					//Update…
@@ -107,11 +153,11 @@
 							return xScale(i);
 						})
 						.attr("y", function(d) {				//Set new y position, based on the updated yScale
-							return h - yScale(d);
+							return h - yScale(d.value);
 						})
 						.attr("width", xScale.rangeBand())		//Set new width value, based on the updated xScale
 						.attr("height", function(d) {			//Set new height value, based on the updated yScale
-							return yScale(d);
+							return yScale(d.value);
 						});
 
 
@@ -121,17 +167,17 @@
 					//Exercise: Modify this code to add a new label each time a new bar is added!
 					//
 					svg.selectAll("text")
-					   .data(dataset)
+					   .data(dataset, key)
 					   .transition()
 					   .duration(500)
 					   .text(function(d) {
-					   		return d;
+					   		return d.value;
 					   })
 					   .attr("x", function(d, i) {
 							return xScale(i) + xScale.rangeBand() / 2;
 					   })
 					   .attr("y", function(d) {
-							return h - yScale(d) + 14;
+							return h - yScale(d.value) + 14;
 					   });
 
 				});
