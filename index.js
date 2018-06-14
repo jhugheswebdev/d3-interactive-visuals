@@ -9,9 +9,12 @@ var dataset = [ 5, 27, 25, 26, 21, 8, 24, 25, 19, 23, 23, 24, 26, 25, 24, 8, 23,
                 .attr('height', height);
 
     var xScale = d3.scale.ordinal()
-    .domain(d3.range(dataset.length))
-    .rangeRoundBands([0, width], 0.05);
+                  .domain(d3.range(dataset.length))
+                  .rangeRoundBands([0, width], 0.05);
 
+    // var yScale = d3.scale.linear()
+    //                   .domain([0, d3.max(dataset, function(d) {return d[1];})])
+    //                   .range([height - padding, padding]);
 
     svg.selectAll("rect")
         .data(dataset)
@@ -20,11 +23,12 @@ var dataset = [ 5, 27, 25, 26, 21, 8, 24, 25, 19, 23, 23, 24, 26, 25, 24, 8, 23,
         .attr({
           x: function(d, i) { return xScale(i); },
           y: function(d) { return height - (d * 4); },
-          width: xScale.rangeBand,
+          width: xScale.rangeBand(),
           height: function(d) { return d * 4; },
           fill: function(d) { return "rgb(0, 0, " + (d * 10) + ")"}
         });
 
+        
     svg.selectAll("text")
         .data(dataset)
         .enter()
