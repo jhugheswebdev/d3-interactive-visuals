@@ -161,7 +161,10 @@ var svg = d3.select("body")
       .attr("height", h);
 
 //Create circles
-svg.selectAll("circle")
+svg.append("g")
+    .attr("id", "circles")
+    .attr("clip-path", "url(#chart-area)")
+    .selectAll("circle")
    .data(dataset)
    .enter()
    .append("circle")
@@ -210,11 +213,21 @@ d3.select("p")
        .data(dataset)
        .transition()
           .duration(1000)
+       .each("start", function(d) {
+         d3.select(this)
+            .attr("fill", "magenta")
+            .attr("r", 3);
+       })
        .attr("cx", function(d) {
            return xScale(d[0]);
        })
        .attr("cy", function(d) {
            return yScale(d[1]);
+       })
+       .each("end", function(d) {
+         d3.select(this)
+            .attr("fill", "black")
+            .attr("r", 2);
        });
 
       //Update X axis
@@ -228,6 +241,16 @@ d3.select("p")
         .transition()
         .duration(1000)
               .call(yAxis);
+
+    svg.append("clipPath")
+        .attr("id", "chart-area")
+        .append("rect")
+        .attr("x", padding)
+        .attr("y", padding)
+        .attr("width", w - padding * 3)
+        .attr("height", h - padding * 2);
+
+        
   });
 
 
