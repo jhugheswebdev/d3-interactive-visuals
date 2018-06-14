@@ -39,70 +39,81 @@
 // ==================================================================
 // =============================== SCATTERPLOT ======================
 
-// var dataset = [
-//   [5,20], 
-//   [480,90], 
-//   [250,50],
-//   [100,33],
-//   [330,95],
-//   [410, 12], 
-//   [475, 44], 
-//   [25, 67], 
-//   [220, 99]
-// ];
+var dataset = [
+  [5,20], 
+  [480,90], 
+  [250,50],
+  [100,33],
+  [330,95],
+  [410, 12], 
+  [475, 44], 
+  [25, 67], 
+  [220, 99]
+];
 
-// var svg = d3.select("body")
-//             .append("svg")
-//             .attr("width", width)
-//             .attr("height", height);
+var width = 500;
+var height = 100;
 
-// svg.selectAll("circle")
-//     .data(dataset)
-//     .enter()
-//     .append("circle")
-//     .attr("cx", function(d) { return d[0];})
-//     .attr("cy", function(d) { return d[1];})
-//     .attr("r", function(d) {
-//       return Math.sqrt(height - d[1]);
-//     });
+var padding = 20;
 
-// svg.selectAll("text")
-//     .data(dataset)
-//     .enter()
-//     .append("text")
-//     .text(function(d) {
-//       return d[0] + ", " + d[1];
-//     })
-//     .attr("x", function(d) {
-//       return d[0];
-//     })
-//     .attr("y", function(d) {
-//       return d[1];
-//     })
-//     .attr("font-family", "sans-serif")
-//     .attr("font-size", "11px")
-//     .attr("fill", "red");
+var xScale = d3.scale.linear()
+    .domain([0, d3.max(dataset, function(d) {return d[0];})])
+    .range([padding, width - padding * 2]);
+
+var yScale = d3.scale.linear()
+    .domain([0, d3.max(dataset, function(d) {return d[1];})])
+    .range([height - padding, padding]);
+
+var rScale = d3.scale.linear()
+    .domain([0, d3.max(dataset, function(d) { return d[1];})])
+    .range([2, 5]);
+
+var svg = d3.select("body")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+svg.selectAll("circle")
+    .data(dataset)
+    .enter()
+    .append("circle")
+    .attr("cx", function(d) { return xScale (d[0]);})
+    .attr("cy", function(d) { return yScale (d[1]);})
+    .attr("r", function(d) {
+      return rScale(d[1]);
+    });
+
+svg.selectAll("text")
+    .data(dataset)
+    .enter()
+    .append("text")
+    .text(function(d) {
+      return d[0] + ", " + d[1];
+    })
+    .attr("x", function(d) {
+      return xScale(d[0]);
+    })
+    .attr("y", function(d) {
+      return yScale(d[1]);
+    })
+    .attr("font-family", "sans-serif")
+    .attr("font-size", "11px")
+    .attr("fill", "red");
 
 // ==============================================
 // SCALES
 
 
 
-var dataset = [
-    [5,20], 
-    [480,90], 
-    [250,50],
-    [100,33],
-    [330,95],
-    [410, 12], 
-    [475, 44], 
-    [25, 67], 
-    [220, 99]
-  ];
+// var dataset = [
+//     [5,20], 
+//     [480,90], 
+//     [250,50],
+//     [100,33],
+//     [330,95],
+//     [410, 12], 
+//     [475, 44], 
+//     [25, 67], 
+//     [220, 99]
+//   ];
 
-  var xScale = d3.scale.linear()
-                    .domain([0, d3.max(dataset, function(d) {return d[0];})])
-                    .range([10, 350]);
-
-  var yScale = d3.scale.linear()
-                        .domain([0, d3.max(dataset, function(d) {return d[1];})])
